@@ -1,0 +1,119 @@
+Canuta Andrei-Mihai 324CB
+Web Client with REST API
+
+Lab 10 was a referance for this!
+Files modified: request.c/h , client.c
+Files added: parson.c/h
+
+I used the parson library to create jsons objects, send them
+    to the server and pretty print them as a response to the server
+
+Function used:
+
+    Auxiliar functions:
+
+        (1) removeEOL:
+            - used to remove end of line (\n) when reading input from stdin with fgets
+            -returns the new input
+
+        (2) checkTimeout:
+            - used to check if the server returns "To many requests ..." 
+            -returns the entire "error" from server
+
+        (3) checkError:
+            - used to check if the server returns a json with the error field
+            - if there is a json with that field, it prints the value of that field, meaning
+            the actual error
+    
+    Main functions:
+
+        Short explanation:
+
+            - every function opens a connection to the server, sends a message, gets the 
+            response from the server and closes the connection.
+
+            - every function checks for timeout (2) and prints it if needed, if 
+            there is no timeout, checks for errors (3) and prints it if needed (3). If there were no errors, it 
+            prints a success message (diferent for every function)
+
+            - the format of the function is <requestType>_<name>, meaning that post_login 
+            will send a post request to the server, get_enter_library will send a get request and so on
+
+        Specific explanation:
+
+            post_login:
+                - sends a json containing the user info (username and password) as payload to the server
+                - returns the conetion cookie if the login was succesful
+
+            post_register:
+                - sends a json containing the user info (username and password) as payload to the server
+
+            get_enter_library:
+                - sends a message containing the login cookie to the server
+                - returns the jwt token if the connection was succesful
+
+            get_books:
+                - sends a message with the login cookie and jwt token to the server
+                - if the request was succesful
+                    if there are no books (the server returns []) it prints a specific message
+                    else it pretty prints the list of books as jons
+
+            get_book:
+                - sends a message with the login cookie and jwt token to the server
+                - the id of the book is passed as a parameter and we create the specific url
+                for the message
+                - if the request was succesful, it prints pretty prints the book info as json
+
+            post_add_book:
+                - sends a message with the login cookie and jwt token,
+                and json containing the book info as payload to the server
+
+            delete_book:
+                - sends a message with the login cookie and jwt token to the server
+                - the id of the book is passed as a parameter and we create the specific url
+                for the message
+                - if the request was succesful we print a specific message
+
+            get_logout:
+                - sends a message with the login cookie and jwt token to the server
+                - if the request was succesful we print a specific message
+
+Main:
+
+    Short explanation:
+
+        - the connect cookie and jwt token are save in two variables that are initiated as null
+
+        - inside a while(1) loop just get and check for command and call
+        the needed functions until the comand is "exit" (when we stop the client)
+            if the comand is not recognized it prints a specifi message
+
+    Specific explanation:
+        
+        register:
+            - get the user info
+
+        login
+            - if the cookie is null, get the user info else print a specific message
+        
+        get_book and delete_book:
+            - get the book id
+
+        add_book:
+            - get the book info
+            - if the given page_count cannot be an int, print a specific message 
+
+        logout:
+            - flushes the login cookie and the jwt token if the get_logout function returns 1
+            (meaning that the user has logged out)
+
+        exit:
+            - stop the client
+
+
+        
+
+        
+
+
+
